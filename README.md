@@ -4,7 +4,7 @@ A music playlist manager built on my own **doubly linked list in Java**, served 
 
 The linked list is the Week 5 practical from CS210 Algorithms and Data Structures (Higher Diploma in Software Development, Maynooth University): songs can be added, inserted, removed and navigated in both directions. The practical forbids `java.util.LinkedList` and `ArrayList` for storing the playlist, so the only storage is a chain of `DLNode`s with `first`, `last`, `previous` and `successor` references. This project puts that data structure behind a real HTTP API so it gets used, not just unit-tested.
 
-**Status:** in progress (October 2026). The tests and the AWS layer are in place. The linked-list classes are being written activity by activity until the tests pass.
+**Status:** deployed and working in eu-west-1
 
 ## Architecture
 
