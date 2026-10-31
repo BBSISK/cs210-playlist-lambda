@@ -60,15 +60,15 @@ What happens to `current` when the current song is removed, and why?
 
 | Operation | Big O | Explain the work performed |
 |---|---|---|
-| Check whether playlist is empty | | |
-| Append using a last reference | | |
-| Prepend using a first reference | | |
-| Print all songs forwards | | |
-| Print all songs backwards | | |
-| Find a song by title | | |
-| Insert before a song identified by title | | |
-| Remove a song identified by title | | |
-| Move to next/previous song when current is known | | |
+| Check whether playlist is empty | O(1)| Single Check |
+| Append using a last reference |O(1) | goto last and append|
+| Prepend using a first reference |O(1) | goto first and prepend| 
+| Print all songs forwards |O(N)| Single traverse from first |
+| Print all songs backwards | O(N) | single traverse from last|
+| Find a song by title | O(N) | single traverse |
+| Insert before a song identified by title | O(N)| traverse |
+| Remove a song identified by title |O(N) | Traverse |
+| Move to next/previous song when current is known |o(1) | got position |
 
 **Discussion.** Why is adding at the end of this doubly linked list different from inserting at the beginning of an ArrayList?
 
