@@ -1,0 +1,17 @@
+# Maven build output
+target/
+
+# SAM build output (rebuilt by `sam build`)
+.aws-sam/
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+
+# Local secrets / env
+.env
+
+# macOS
+.DS_Store
+*.jdk/

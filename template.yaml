@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: CS210 music playlist (custom doubly linked list in Java) as a serverless API with DynamoDB
+
+Globals:
+  Function:
+    Runtime: java21
+    Architectures: [arm64]
+    MemorySize: 512
+    Timeout: 15
+
+Resources:
+  PlaylistTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: playlistId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: playlistId
+          KeyType: HASH
+      # Demo data cleans itself up: DynamoDB deletes a playlist 30 days after its last change.
+      TimeToLiveSpecification:
+        AttributeName: expiresAt
+        Enabled: true
+
+  PlaylistApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      # Public and unauthenticated, so keep the request rate low.
+      MethodSettings:
+        - ResourcePath: '/*'
+          HttpMethod: '*'
+          ThrottlingRateLimit: 5
+          ThrottlingBurstLimit: 10
+
+  PlaylistFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: playlist.api.PlaylistHandler::handleRequest
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref PlaylistTable
+      # Least privilege: only the three item operations the code uses, only on this table.
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+                - dynamodb:DeleteItem
+              Resource: !GetAtt PlaylistTable.Arn
+      Events:
+        GetPlaylist:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PlaylistApi
+            Path: /playlists/{id}
+            Method: get
+        DeletePlaylist:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PlaylistApi
+            Path: /playlists/{id}
+            Method: delete
+        AddSong:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PlaylistApi
+            Path: /playlists/{id}/songs
+            Method: post
+        RemoveSong:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PlaylistApi
+            Path: /playlists/{id}/songs
+            Method: delete
+        Play:
+          Type: Api
+          Properties:
+            RestApiId: !Ref PlaylistApi
+            Path: /playlists/{id}/play
+            Method: post
+
+Outputs:
+  PlaylistApiUrl:
+    Description: Base URL (append /playlists/{id})
+    Value: !Sub "https://${PlaylistApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
+  PlaylistTableName:
+    Description: DynamoDB table
+    Value: !Ref PlaylistTable

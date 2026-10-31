@@ -1,0 +1,8 @@
+{
+  "httpMethod": "POST",
+  "resource": "/playlists/{id}/songs",
+  "pathParameters": { "id": "demo" },
+  "queryStringParameters": null,
+  "body": "{\"title\":\"Midnight Drive\",\"artist\":\"The Signals\",\"durationSeconds\":215}",
+  "isBase64Encoded": false
+}

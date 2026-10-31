@@ -1,0 +1,8 @@
+{
+  "httpMethod": "GET",
+  "resource": "/playlists/{id}",
+  "pathParameters": { "id": "demo" },
+  "queryStringParameters": null,
+  "body": null,
+  "isBase64Encoded": false
+}
